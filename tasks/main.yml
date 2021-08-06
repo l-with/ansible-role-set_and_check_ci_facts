@@ -3,7 +3,7 @@
 - name: Ensure lookup required ci variables from env
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper ) }}" }
   loop: "{{ set_and_check_ci_facts_required_vars }}"
-  when: not set_and_check_facts_from_terraform_state
+  when: not set_and_check_ci_facts_from_terraform_state
 
 - name: Ensure lookup required ci variables from terraform state
   block:
