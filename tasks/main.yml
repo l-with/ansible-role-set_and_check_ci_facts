@@ -2,7 +2,7 @@
 
 - name: Ensure lookup required environment variables
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper ) }}" }
-  loop: "{{ set_and_check_facts_from_environment_required_vars }}"
+  loop: "{{ set_and_check_ci_facts_required_vars }}"
   when: not set_and_check_facts_from_terraform_state
 
 - name: Ensure lookup required environment variables from terraform state
@@ -10,7 +10,7 @@
 
     - name: Ensure terraform init
       ansible.builtin.command:
-        cmd: "{{ set_and_check_facts_from_terraform_state_terraform_command }} init"
+        cmd: "{{ set_and_check_ci_facts_from_terraform_state_terraform_command }} init"
         creates: .terraform/terraform.tfstate
       delegate_to: localhost
 
@@ -32,29 +32,29 @@
           | community.general.json_query('values.outputs.'+item+'.value')
         }}" 
       }
-      loop: "{{ set_and_check_facts_from_environment_required_vars }}"
+      loop: "{{ set_and_check_ci_facts_required_vars }}"
       delegate_to: localhost
 
-  when: set_and_check_facts_from_terraform_state
+  when: set_and_check_ci_facts_from_terraform_state
 
 - name: Check required environment variables
   ansible.builtin.fail:
     msg: Environment variable '{{ item }}' is not set
   when: not lookup('vars', item)
-  with_items: "{{ set_and_check_facts_from_environment_required_vars 
-    | difference(set_and_check_facts_from_environment_non_required_vars)
+  with_items: "{{ set_and_check_ci_facts_required_vars 
+    | difference(set_and_check_ci_facts_non_required_vars)
   }}"
 
 - name: Ensure lookup required environment variables from TF_VAR_*
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
-  loop: "{{ set_and_check_facts_from_environment_required_tf_vars }}"
+  loop: "{{ set_and_check_ci_facts_required_tf_vars }}"
 
 - name: Check required environment variables from TF_VAR_*
   ansible.builtin.fail:
     msg: Environment variable '{{ 'TF_VAR_'+item }}' is not set
   when: not lookup('vars', item)
-  with_items: "{{ set_and_check_facts_from_environment_required_tf_vars 
-    | difference(set_and_check_facts_from_environment_non_required_tf_vars)
+  with_items: "{{ set_and_check_ci_facts_required_tf_vars 
+    | difference(set_and_check_ci_facts_non_required_tf_vars)
   }}"
 
 ...

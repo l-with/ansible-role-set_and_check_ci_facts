@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  role_name: set_and_check_facts_from_environment
+  role_name: set_and_check_ci_facts
   description: set and check facts from environment
   author: l_with
   license: MIT
