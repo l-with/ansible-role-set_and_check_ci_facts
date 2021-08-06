@@ -45,11 +45,11 @@ The ansible variables are name without prefix `TF_VAR_` and assumed to be name w
 
 the list of variables `TF_VAR_*` not to check if set
 
-### `set_and_check_facts_from_terraform_state`: `false`
+### `set_and_check_ci_facts_from_terraform_state`: `false`
 
 if the fact should be read from terraform state instead from environment
 
-### `set_and_check_facts_from_terraform_state_terraform_command`: `'terraform'`
+### `set_and_check_ci_facts_from_terraform_state_terraform_command`: `'terraform'`
 
 the terraform cmd
 
