@@ -2,6 +2,8 @@
 
 set_and_check_ci_facts_required_vars:         []
 set_and_check_ci_facts_non_required_vars:     []
+set_and_check_ci_facts_required_env_vars:     []
+set_and_check_ci_facts_non_required_env_vars: []
 set_and_check_ci_facts_required_tf_vars:      []
 set_and_check_ci_facts_non_required_tf_vars:  []
 

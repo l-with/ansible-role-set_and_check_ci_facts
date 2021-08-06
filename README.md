@@ -2,16 +2,36 @@
 
 sets and checks facts from environment variables or from terraform state on control node
 
+## Dependencies
+
+The role depends on terraform and a backend configuration for terraform including the credentials (possibly set by environment variables).
+
+The role uses `community.general.json_query`.
+
 ## Role Variables
 
 ### `set_and_check_ci_facts_required_vars`: `[]`
 
+the list of variables to get from environment or terraform state
+
+The variables are looked up from
+
+- the environment variables with the same name as in the list, but in upper cases (if `set_and_check_facts_from_terraform_state` is `false`)
+- the outputs of the terraform state with the same name as in the list (if `set_and_check_facts_from_terraform_state`)
+
+If the variable could not be set and is not in `set_and_check_ci_facts_non_required_vars`, ansible.builtin.failed is used to fail.
+
+### `set_and_check_ci_facts_non_required_vars`: `[]`
+
+the list of variables not to check if set
+
+### `set_and_check_ci_facts_required_env_vars`: `[]`
+
 the list of variables to get from environment
 
 The variables are looked up from the environment variables with the same name as in the list, but in upper cases.
-If the environment variable is not set and not in `set_and_check_ci_facts_non_required_vars`, ansible.builtin.failed is used to fail.
 
-### `set_and_check_ci_facts_non_required_vars`: `[]`
+### `set_and_check_ci_facts_non_required_env_vars`: `[]`
 
 the list of variables not to check if set
 
