@@ -3,10 +3,39 @@
 - name: Ensure lookup required environment variables
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper ) }}" }
   loop: "{{ set_and_check_facts_from_environment_required_vars }}"
-  
-- name: Ensure lookup required environment variables from TF_VAR_*
-  ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
-  loop: "{{ set_and_check_facts_from_environment_required_tf_vars }}"
+  when: not set_and_check_facts_from_terraform_state
+
+- name: Ensure lookup required environment variables from terraform state
+  block:
+
+    - name: Ensure terraform init
+      ansible.builtin.command:
+        cmd: "{{ set_and_check_facts_from_terraform_state_terraform_command }} init"
+        creates: .terraform/terraform.tfstate
+      delegate_to: localhost
+
+    - name: Ensure terraform state loaded
+      ansible.builtin.command:
+        cmd: "{{ set_and_check_facts_from_terraform_state_terraform_command }} show -json"
+      register: _terraform_state_output
+      changed_when: false
+      delegate_to: localhost
+
+    - name: Set fact _terraform_state
+      ansible.builtin.set_fact:
+        _terraform_state: "{{ _terraform_state_output.stdout }}"
+      delegate_to: localhost
+
+    - name: Ensure lookup required variables
+      ansible.builtin.set_fact: { 
+        "{{ item }}": "{{ _terraform_state 
+          | community.general.json_query('values.outputs.'+item+'.value')
+        }}" 
+      }
+      loop: "{{ set_and_check_facts_from_environment_required_vars }}"
+      delegate_to: localhost
+
+  when: set_and_check_facts_from_terraform_state
 
 - name: Check required environment variables
   ansible.builtin.fail:
@@ -15,6 +44,10 @@
   with_items: "{{ set_and_check_facts_from_environment_required_vars 
     | difference(set_and_check_facts_from_environment_non_required_vars)
   }}"
+
+- name: Ensure lookup required environment variables from TF_VAR_*
+  ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
+  loop: "{{ set_and_check_facts_from_environment_required_tf_vars }}"
 
 - name: Check required environment variables from TF_VAR_*
   ansible.builtin.fail:
