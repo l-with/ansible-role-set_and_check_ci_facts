@@ -19,7 +19,7 @@
 - name: Check required environment variables from TF_VAR_*
   ansible.builtin.fail:
     msg: Environment variable '{{ 'TF_VAR_'+item }}' is not set
-  when: not lookup('vars', 'TF_VAR_'+item)
+  when: not lookup('vars', item)
   with_items: "{{ set_and_check_facts_from_environment_required_tf_vars 
     | difference(set_and_check_facts_from_environment_non_required_tf_vars)
   }}"
