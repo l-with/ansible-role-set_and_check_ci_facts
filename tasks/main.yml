@@ -1,0 +1,27 @@
+---
+
+- name: Ensure lookup required environment variables
+  ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper ) }}" }
+  loop: "{{ set_and_check_facts_from_environment_required_vars }}"
+  
+- name: Ensure lookup required environment variables from TF_VAR_*
+  ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
+  loop: "{{ set_and_check_facts_from_environment_required_tf_vars }}"
+
+- name: Check required environment variables
+  ansible.builtin.fail:
+    msg: Environment variable '{{ item }}' is not set
+  when: not lookup('vars', item)
+  with_items: "{{ set_and_check_facts_from_environment_required_vars 
+    | difference(set_and_check_facts_from_environment_non_required_vars)
+  }}"
+
+- name: Check required environment variables from TF_VAR_*
+  ansible.builtin.fail:
+    msg: Environment variable '{{ 'TF_VAR_'+item }}' is not set
+  when: not lookup('vars', 'TF_VAR_'+item)
+  with_items: "{{ set_and_check_facts_from_environment_required_tf_vars 
+    | difference(set_and_check_facts_from_environment_non_required_tf_vars)
+  }}"
+
+...

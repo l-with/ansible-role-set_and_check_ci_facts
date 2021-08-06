@@ -1,0 +1,16 @@
+---
+
+galaxy_info:
+  role_name: set_and_check_facts_from_environment
+  description: set and check facts from environment
+  author: l_with
+  license: MIT
+  license_file: LICENSE
+  min_ansible_version: 2.9
+  platforms:
+  - name: Ubuntu
+    versions: focal
+  - name: EL
+    versions: 8
+
+...
