@@ -1,6 +1,6 @@
 # Ansible Role set and check CI facts
 
-sets and checks facts from environment variables on control node
+sets and checks facts from environment variables or from terraform state on control node
 
 ## Role Variables
 
@@ -24,3 +24,14 @@ The ansible variables are name without prefix `TF_VAR_` and assumed to be name w
 ### `set_and_check_facts_from_environment_non_required_tf_vars`: `[]`
 
 the list of variables `TF_VAR_*` not to check if set
+
+### `set_and_check_facts_from_terraform_state`: `false`
+
+if the fact should be read from terraform state instead from environment
+
+### `set_and_check_facts_from_terraform_state_terraform_command`: `'terraform'`
+
+the terraform cmd
+
+This can be used for GitLab ci to set to `gitlab-terraform` or for specifying a terraform command by full path.
+
