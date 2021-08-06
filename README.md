@@ -49,7 +49,7 @@ the list of variables `TF_VAR_*` not to check if set
 
 if the fact should be read from terraform state instead from environment
 
-### `set_and_check_ci_facts_from_terraform_state_terraform_command`: `'terraform'`
+### `set_and_check_ci_facts_terraform_command`: `'terraform'`
 
 the terraform cmd
 

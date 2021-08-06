@@ -10,13 +10,13 @@
 
     - name: Ensure terraform init
       ansible.builtin.command:
-        cmd: "{{ set_and_check_ci_facts_from_terraform_state_terraform_command }} init"
+        cmd: "{{ set_and_check_ci_facts_terraform_command }} init"
         creates: .terraform/terraform.tfstate
       delegate_to: localhost
 
     - name: Ensure terraform state loaded
       ansible.builtin.command:
-        cmd: "{{ set_and_check_ci_facts_from_terraform_state_terraform_command }} show -json"
+        cmd: "{{ set_and_check_ci_facts_terraform_command }} show -json"
       register: _terraform_state_output
       changed_when: false
       delegate_to: localhost
