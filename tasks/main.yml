@@ -42,8 +42,7 @@
     msg: Environment variable '{{ item }}' is not set
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_vars 
-    | difference(set_and_check_ci_facts_non_required_vars)
-  }}"
+    | difference(set_and_check_ci_facts_non_required_vars)  }}"
 
 - name: Ensure lookup required environment variables
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper ) }}" }
@@ -54,8 +53,7 @@
     msg: Environment variable '{{ item }}' is not set
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_env_vars 
-    | difference(set_and_check_ci_facts_non_required_env_vars)
-  }}"
+    | difference(set_and_check_ci_facts_non_required_env_vars) }}"
 
 - name: Ensure lookup required environment variables from TF_VAR_*
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
@@ -66,7 +64,6 @@
     msg: Environment variable '{{ 'TF_VAR_'+item }}' is not set
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_tf_vars 
-    | difference(set_and_check_ci_facts_non_required_tf_vars)
-  }}"
+    | difference(set_and_check_ci_facts_non_required_tf_vars) }}"
 
 ...
