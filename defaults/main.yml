@@ -9,5 +9,6 @@ set_and_check_ci_facts_non_required_tf_vars:  []
 
 set_and_check_ci_facts_from_terraform_state:  false
 set_and_check_ci_facts_terraform_command:     'terraform'
+set_and_check_ci_facts_terraform_dir:         '.'
 
 ...

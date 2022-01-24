@@ -55,3 +55,6 @@ the terraform cmd
 
 This can be used for GitLab ci to set to `gitlab-terraform` or for specifying a terraform command by full path.
 
+### `set_and_check_ci_facts_terraform_dir`: '.'
+
+the director to `chdir` for executing `set_and_check_ci_facts_terraform_command`
