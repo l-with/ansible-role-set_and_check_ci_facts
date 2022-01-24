@@ -4,7 +4,7 @@ sets and checks facts from environment variables or from terraform state on cont
 
 ## Dependencies
 
-The role depends on terraform and a backend configuration for terraform including the credentials (possibly set by environment variables).
+The role depends on terraform and a backend configuration for terraform including the credentials (possibly set by environment variables) in the folder the playbook is executed (not the folder of the playbook).
 
 The role uses `community.general.json_query`.
 
