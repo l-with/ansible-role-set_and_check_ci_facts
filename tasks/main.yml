@@ -20,7 +20,7 @@
         cmd: "{{ set_and_check_ci_facts_terraform_command }} show -json"
         chdir: "{{ set_and_check_ci_facts_terraform_dir }}"
       register: _terraform_state_output
-      until:        _terraform_state_output.stdout.values is defined
+      until:        _terraform_state_output.stdout.find("terraform") != -1
       retries:      10
       delay:        2
       changed_when: false
