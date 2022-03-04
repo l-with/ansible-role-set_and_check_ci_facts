@@ -17,9 +17,12 @@
 
     - name: Ensure terraform state loaded
       ansible.builtin.command:
-        cmd: "{{ set_and_check_ci_facts_terraform_command }} show -json -lock=false"
+        cmd: "{{ set_and_check_ci_facts_terraform_command }} show -json"
         chdir: "{{ set_and_check_ci_facts_terraform_dir }}"
       register: _terraform_state_output
+      until:        _terraform_state_output.stdout.outputs is defined
+      retries:      10
+      delay:        2
       changed_when: false
       delegate_to: localhost
 
