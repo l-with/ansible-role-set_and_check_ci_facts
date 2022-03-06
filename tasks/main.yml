@@ -13,6 +13,11 @@
         cmd: "{{ set_and_check_ci_facts_terraform_command }} init"
         chdir: "{{ set_and_check_ci_facts_terraform_dir }}"
         creates: .terraform/terraform.tfstate
+      register:     _terraform_init_output
+      until:        _terraform_init_output.rc == 0
+      retries:      10
+      delay:        2
+      changed_when: false
       delegate_to: localhost
 
     - name: Ensure terraform state loaded
