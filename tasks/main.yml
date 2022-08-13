@@ -36,6 +36,12 @@
         _terraform_state: "{{ _terraform_state_output.stdout }}"
       delegate_to: localhost
 
+    - name: Print _terraform_state
+      ansible.builtin.debug:
+        msg: "_terraform_state: {{ _terraform_state }}"
+      delegate_to: localhost
+      when: set_and_check_ci_facts_print_terraform_state
+
     - name: Ensure lookup required variables
       ansible.builtin.set_fact: { 
         "{{ item }}": "{{ _terraform_state 

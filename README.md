@@ -22,4 +22,6 @@ The role uses `community.general.json_query`.
 | control | set_and_check_ci_facts_from_terraform_state | `false` | if the facts in `set_and_check_ci_facts_required_vars` should be read from terraform state instead from environment |
 | control | set_and_check_ci_facts_terraform_command | `'terraform'` | <p>the terraform cmd</p>This can be used for GitLab ci to set to `gitlab-terraform` or for specifying a terraform command by full path. |
 | control | `set_and_check_ci_facts_terraform_dir` | `'.'` | the director to `chdir` before executing `set_and_check_ci_facts_terraform_command` |
+| debug | `set_and_check_ci_facts_print_terraform_state` | `false` | if the terraform state should be printed (only output values) |
+
 <!-- markdownlint-enable MD033 -->
