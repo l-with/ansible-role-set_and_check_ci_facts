@@ -11,6 +11,7 @@ set_and_check_ci_facts_from_terraform_state:  false
 set_and_check_ci_facts_terraform_command:     'terraform'
 set_and_check_ci_facts_terraform_dir:         '.'
 
+set_and_check_ci_facts_debug_terraform_state: false
 set_and_check_ci_facts_print_terraform_state: false
 
 ...
