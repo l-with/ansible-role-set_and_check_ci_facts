@@ -8,17 +8,20 @@
 - name: Ensure lookup required ci variables from terraform state
   block:
 
-    - name: Ensure terraform init
+    - name: Execute terraform init -reconfigure
       ansible.builtin.command:
-        cmd: "{{ set_and_check_ci_facts_terraform_command }} init"
+        cmd: "{{ set_and_check_ci_facts_terraform_command }} init -reconfigure"
         chdir: "{{ set_and_check_ci_facts_terraform_dir }}"
-        creates: .terraform/terraform.tfstate
       register:     _terraform_init_output
       until:        _terraform_init_output.rc == 0
       retries:      10
       delay:        2
-      changed_when: false
       delegate_to: localhost
+
+    - name: Print terraform init output
+      ansible.builtin.debug:
+        msg: "_terraform_init_output: {{ _terraform_init_output }}"
+      when: set_and_check_ci_facts_debug_terraform_state
 
     - name: Ensure terraform state loaded
       ansible.builtin.command:
@@ -28,7 +31,6 @@
       until:        _terraform_state_output.rc == 0
       retries:      10
       delay:        2
-      changed_when: false
       delegate_to: localhost
 
     - name: Set fact _terraform_state
