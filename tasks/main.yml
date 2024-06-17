@@ -1,8 +1,8 @@
 ---
 
-- name: Ensure lookup required ci variables from env
+- name: Ensure lookup ci variables from env
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper) }}" }
-  loop: "{{ set_and_check_ci_facts_required_vars }}"
+  loop: "{{ set_and_check_ci_facts_required_vars | union(set_and_check_ci_facts_non_required_vars) }}"
   when: not set_and_check_ci_facts_from_terraform_state
 
 - name: Ensure lookup required ci variables from terraform state
@@ -50,7 +50,7 @@
           | community.general.json_query('values.outputs.'+item+'.value')
         }}" 
       }
-      loop: "{{ set_and_check_ci_facts_required_vars }}"
+      loop: "{{ set_and_check_ci_facts_required_vars | union(set_and_check_ci_facts_non_required_vars) }}"
       delegate_to: localhost
 
   when: set_and_check_ci_facts_from_terraform_state
@@ -62,9 +62,9 @@
   with_items: "{{ set_and_check_ci_facts_required_vars 
     | difference(set_and_check_ci_facts_non_required_vars)  }}"
 
-- name: Ensure lookup required environment variables
+- name: Ensure lookup environment variables
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper) }}" }
-  loop: "{{ set_and_check_ci_facts_required_env_vars }}"
+  loop: "{{ set_and_check_ci_facts_required_env_vars | union(set_and_check_ci_facts_non_required_env_vars) }}"
 
 - name: Check required environment variables
   ansible.builtin.fail:
