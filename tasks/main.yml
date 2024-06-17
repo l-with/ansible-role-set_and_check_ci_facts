@@ -75,7 +75,7 @@
 
 - name: Ensure lookup required environment variables from TF_VAR_*
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
-  loop: "{{ set_and_check_ci_facts_required_tf_vars | set_and_check_ci_facts_non_required_tf_vars }}"
+  loop: "{{ set_and_check_ci_facts_required_tf_vars | union(set_and_check_ci_facts_non_required_tf_vars) }}"
 
 - name: Check required environment variables from TF_VAR_*
   ansible.builtin.fail:
