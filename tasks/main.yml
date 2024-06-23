@@ -4,6 +4,7 @@
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper) }}" }
   loop: "{{ set_and_check_ci_facts_required_vars | union(set_and_check_ci_facts_non_required_vars) }}"
   when: not set_and_check_ci_facts_from_terraform_state
+  check_mode: false
 
 - name: Ensure lookup required ci variables from terraform state
   block:
@@ -17,11 +18,13 @@
       retries:      10
       delay:        2
       delegate_to: localhost
+      check_mode: false
 
     - name: Print terraform init output
       ansible.builtin.debug:
         msg: "_terraform_init_output: {{ _terraform_init_output }}"
       when: set_and_check_ci_facts_debug_terraform_state
+      check_mode: false
 
     - name: Ensure terraform state loaded
       ansible.builtin.command:
@@ -32,17 +35,20 @@
       retries:      10
       delay:        2
       delegate_to: localhost
+      check_mode: false
 
     - name: Set fact _terraform_state
       ansible.builtin.set_fact:
         _terraform_state: "{{ _terraform_state_output.stdout }}"
       delegate_to: localhost
+      check_mode: false
 
     - name: Print _terraform_state
       ansible.builtin.debug:
         msg: "_terraform_state: {{ _terraform_state }}"
       delegate_to: localhost
       when: set_and_check_ci_facts_print_terraform_state
+      check_mode: false
 
     - name: Ensure lookup required variables
       ansible.builtin.set_fact: { 
@@ -52,8 +58,10 @@
       }
       loop: "{{ set_and_check_ci_facts_required_vars | union(set_and_check_ci_facts_non_required_vars) }}"
       delegate_to: localhost
+      check_mode: false
 
   when: set_and_check_ci_facts_from_terraform_state
+  check_mode: false
 
 - name: Check required ci variables
   ansible.builtin.fail:
@@ -61,10 +69,12 @@
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_vars 
     | difference(set_and_check_ci_facts_non_required_vars)  }}"
+  check_mode: false
 
 - name: Ensure lookup environment variables
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', item | upper) }}" }
   loop: "{{ set_and_check_ci_facts_required_env_vars | union(set_and_check_ci_facts_non_required_env_vars) }}"
+  check_mode: false
 
 - name: Check required environment variables
   ansible.builtin.fail:
@@ -72,10 +82,12 @@
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_env_vars 
     | difference(set_and_check_ci_facts_non_required_env_vars) }}"
+  check_mode: false
 
 - name: Ensure lookup required environment variables from TF_VAR_*
   ansible.builtin.set_fact: { "{{ item }}": "{{ lookup('env', 'TF_VAR_'+item) }}" }
   loop: "{{ set_and_check_ci_facts_required_tf_vars | union(set_and_check_ci_facts_non_required_tf_vars) }}"
+  check_mode: false
 
 - name: Check required environment variables from TF_VAR_*
   ansible.builtin.fail:
@@ -83,5 +95,6 @@
   when: not lookup('vars', item)
   with_items: "{{ set_and_check_ci_facts_required_tf_vars 
     | difference(set_and_check_ci_facts_non_required_tf_vars) }}"
+  check_mode: false
 
 ...
